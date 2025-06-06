@@ -1,0 +1,174 @@
+/* Titlebar Styles for Frame Evolve */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Base titlebar styling */
+.titlebar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Drag region styling - CRITICAL for Electron window dragging */
+.drag-region {
+  -webkit-app-region: drag;
+  user-select: none;
+  cursor: default;
+}
+
+/* Ensure child elements don't interfere with dragging */
+.drag-region * {
+  -webkit-app-region: no-drag;
+  pointer-events: auto;
+}
+
+/* Re-enable dragging for text that should be draggable */
+.drag-region .draggable-text {
+  -webkit-app-region: drag;
+  pointer-events: none;
+}
+
+/* Window controls must explicitly disable drag */
+.window-controls,
+.window-controls * {
+  -webkit-app-region: no-drag !important;
+  pointer-events: auto;
+}
+
+/* Buttons and interactive elements */
+button,
+input,
+select,
+textarea,
+a {
+  -webkit-app-region: no-drag !important;
+}
+
+/* macOS specific styles */
+.titlebar-container.darwin {
+  padding-left: 80px; /* Space for traffic lights */
+}
+
+/* Traffic light positioning for macOS */
+.titlebar-container.darwin .traffic-lights {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Windows/Linux specific styles */
+.titlebar-container.win32,
+.titlebar-container.linux {
+  padding-left: 0;
+}
+
+/* Prevent text selection in titlebar */
+.titlebar-container * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow text selection in specific areas if needed */
+.titlebar-container .selectable {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Smooth animations for window state changes */
+.titlebar-container .window-controls button {
+  transform: scale(1);
+  opacity: 1;
+  transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.2s ease;
+}
+
+.titlebar-container .window-controls button:hover {
+  transform: scale(1.05);
+}
+
+.titlebar-container .window-controls button:active {
+  transform: scale(0.95);
+}
+
+/* Logo animation */
+.titlebar-container .app-logo {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.titlebar-container .app-logo:hover {
+  transform: rotate(5deg) scale(1.05);
+}
+
+/* Version badge styling */
+.version-badge {
+  background: rgba(51, 65, 85, 0.5);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+/* Gradient overlays */
+.titlebar-gradient-overlay {
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.titlebar-border-highlight {
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(59, 130, 246, 0.3) 50%,
+    transparent 100%
+  );
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .titlebar-container .version-badge {
+    display: none;
+  }
+  
+  .titlebar-container .window-title {
+    font-size: 0.875rem;
+  }
+}
+
+/* Focus styles for accessibility */
+.titlebar-container button:focus {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .titlebar-container {
+    background: #000000;
+    border-bottom: 2px solid #ffffff;
+  }
+  
+  .titlebar-container .text-slate-300 {
+    color: #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .titlebar-container * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
