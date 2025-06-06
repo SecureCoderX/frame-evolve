@@ -1,0 +1,138 @@
+.
+├── assets
+│   ├── fonts
+│   ├── icons
+│   └── images
+├── build
+│   ├── asset-manifest.json
+│   ├── electron.js
+│   ├── index.html
+│   ├── manifest.json
+│   ├── preload.js
+│   └── static
+│       ├── css
+│       │   ├── main.60376307.css
+│       │   └── main.60376307.css.map
+│       └── js
+│           ├── main.cc43bef7.js
+│           ├── main.cc43bef7.js.LICENSE.txt
+│           └── main.cc43bef7.js.map
+├── docs
+│   ├── api.md
+│   ├── contributing.md
+│   └── setup.md
+├── package.json
+├── package-lock.json
+├── postcss.config.js
+├── public
+│   ├── electron.js
+│   ├── index.html
+│   ├── manifest.json
+│   └── preload.js
+├── README.md
+├── setup-input-components.js
+├── src
+│   ├── App.js
+│   ├── components
+│   │   ├── input
+│   │   │   ├── FileBrowser.jsx
+│   │   │   ├── FileDragDropZone.jsx
+│   │   │   ├── FileInfoDisplay.jsx
+│   │   │   ├── index.js
+│   │   │   ├── UploadManager.jsx
+│   │   │   └── UploadProgress.jsx
+│   │   ├── layout
+│   │   │   ├── ContentArea.jsx
+│   │   │   ├── MainLayout.jsx
+│   │   │   ├── Sidebar.jsx
+│   │   │   └── StatusBar.jsx
+│   │   ├── splash
+│   │   │   ├── BrandIdentity.jsx
+│   │   │   ├── LoadingAnimation.jsx
+│   │   │   └── SplashScreen.jsx
+│   │   ├── titlebar
+│   │   │   ├── DragRegion.jsx
+│   │   │   ├── TitleBar.jsx
+│   │   │   └── WindowControls.jsx
+│   │   ├── ui
+│   │   │   ├── Button.jsx
+│   │   │   ├── Input.jsx
+│   │   │   ├── Modal.jsx
+│   │   │   └── ProgressBar.jsx
+│   │   ├── video
+│   │   │   ├── ComparisonView.jsx
+│   │   │   ├── PreviewPanel.jsx
+│   │   │   └── VideoPlayer.jsx
+│   │   └── views
+│   │       ├── HomeView.jsx
+│   │       └── PlaceholderViews.jsx
+│   ├── design-system
+│   │   ├── components
+│   │   │   ├── atoms
+│   │   │   │   ├── Badge.jsx
+│   │   │   │   ├── Button.jsx
+│   │   │   │   ├── Icon.jsx
+│   │   │   │   ├── index.js
+│   │   │   │   └── Input.jsx
+│   │   │   ├── index.js
+│   │   │   ├── molecules
+│   │   │   │   ├── Card.jsx
+│   │   │   │   ├── index.js
+│   │   │   │   ├── ProgressBar.jsx
+│   │   │   │   ├── Toast.jsx
+│   │   │   │   └── Tooltip.jsx
+│   │   │   └── organisms
+│   │   │       ├── DataTable.jsx
+│   │   │       ├── index.js
+│   │   │       ├── Modal.jsx
+│   │   │       └── Navigation.jsx
+│   │   ├── index.js
+│   │   ├── tokens
+│   │   │   ├── animations.js
+│   │   │   ├── colors.js
+│   │   │   ├── index.js
+│   │   │   ├── spacing.js
+│   │   │   └── typography.js
+│   │   └── utils
+│   │       ├── animations.js
+│   │       ├── index.js
+│   │       ├── responsive.js
+│   │       └── theme.js
+│   ├── hooks
+│   │   ├── useFileHandler.js
+│   │   ├── useProcessor.js
+│   │   └── useTheme.js
+│   ├── index.js
+│   ├── services
+│   │   ├── ai-engine
+│   │   │   ├── AIProcessor.js
+│   │   │   ├── EnhancementEngine.js
+│   │   │   └── ModelManager.js
+│   │   ├── file-handler
+│   │   │   ├── FileManager.js
+│   │   │   ├── MetadataExtractor.js
+│   │   │   └── Validator.js
+│   │   └── processor
+│   │       ├── FFMPEGWrapper.js
+│   │       ├── ProcessingEngine.js
+│   │       └── QueueManager.js
+│   ├── styles
+│   │   ├── animations.css
+│   │   ├── components.css
+│   │   └── globals.css
+│   └── utils
+│       ├── constants.js
+│       ├── formatters.js
+│       └── helpers.js
+├── structure.txt
+├── tailwind.config.js
+└── tests
+    ├── components
+    │   ├── SplashScreen.test.js
+    │   ├── TitleBar.test.js
+    │   └── VideoPlayer.test.js
+    ├── services
+    │   ├── FileManager.test.js
+    │   └── ProcessingEngine.test.js
+    └── utils
+        └── helpers.test.js

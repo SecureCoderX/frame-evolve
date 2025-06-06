@@ -1,265 +1,299 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Upload, 
-  Sparkles, 
-  TrendingUp, 
-  Clock,
-  Video,
-  Zap,
-  ChevronRight,
-  Plus
-} from 'lucide-react';
+import { Play, Upload, Settings, Zap } from 'lucide-react';
 
-/**
- * Home dashboard view component
- * Displays overview, quick actions, and recent activity
- */
-const HomeView = ({ 
-  currentProject, 
-  processingQueue, 
-  onViewChange, 
-  onProjectSelect 
-}) => {
+// Try different import approaches to debug the issue
 
-  // Animation variants
-  const containerVariants = {
-    initial: { opacity: 0 },
-    animate: { 
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
+// Option 1: Try importing from existing UI components (most likely to work)
+// import Button from '../ui/Button';
+
+// Option 2: Try direct imports from design system
+// import Button from '../../design-system/components/atoms/Button';
+// import Card from '../../design-system/components/molecules/Card';
+
+// Option 3: For now, let's create inline components to isolate the issue
+const Button = ({ children, variant = 'primary', size = 'md', className = '', onClick, ...props }) => (
+  <button
+    onClick={onClick}
+    className={`
+      px-4 py-2 rounded-lg font-medium transition-all duration-200
+      ${variant === 'primary' ? 'bg-blue-600 hover:bg-blue-700 text-white' :
+        variant === 'secondary' ? 'bg-slate-700 hover:bg-slate-600 text-slate-200 border border-slate-600' :
+        'bg-transparent hover:bg-slate-800 text-slate-400'}
+      ${size === 'sm' ? 'px-3 py-1 text-sm' : 'px-4 py-2'}
+      ${className}
+    `}
+    {...props}
+  >
+    {children}
+  </button>
+);
+
+const Card = ({ children, className = '', variant = 'default', onClick, ...props }) => (
+  <div
+    onClick={onClick}
+    className={`
+      rounded-lg border transition-all duration-200
+      ${variant === 'interactive' ? 
+        'border-slate-600 bg-slate-800/50 hover:border-slate-500 hover:bg-slate-800/70 hover:scale-105' :
+        'border-slate-700 bg-slate-800/50'}
+      ${className}
+    `}
+    {...props}
+  >
+    {children}
+  </div>
+);
+
+const HomeView = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      console.log('File selected:', file.name);
     }
   };
 
-  const itemVariants = {
-    initial: { opacity: 0, y: 20 },
-    animate: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.4, ease: 'easeOut' }
-    }
-  };
-
-  // Quick action items
   const quickActions = [
     {
-      id: 'upload',
-      title: 'Upload Videos',
-      description: 'Add new videos to enhance',
       icon: Upload,
-      color: 'blue',
-      action: () => onViewChange('upload')
+      title: 'Upload Video',
+      description: 'Drag & drop or browse for video files',
+      action: () => {
+        document.getElementById('file-input')?.click();
+      }
     },
     {
-      id: 'enhance',
-      title: 'Start Enhancing',
-      description: 'Begin video enhancement',
-      icon: Sparkles,
-      color: 'purple',
-      disabled: !currentProject,
-      action: () => onViewChange('enhance')
+      icon: Zap,
+      title: 'Quick Enhance',
+      description: 'AI-powered automatic enhancement',
+      action: () => console.log('Quick enhance clicked'),
+      disabled: !selectedFile
     },
     {
-      id: 'queue',
-      title: 'View Queue',
-      description: `${processingQueue.length} items in queue`,
-      icon: Clock,
-      color: 'green',
-      action: () => onViewChange('queue')
+      icon: Settings,
+      title: 'Custom Settings',
+      description: 'Advanced enhancement controls',
+      action: () => console.log('Custom settings clicked'),
+      disabled: !selectedFile
+    },
+    {
+      icon: Play,
+      title: 'Preview',
+      description: 'Preview enhanced video',
+      action: () => console.log('Preview clicked'),
+      disabled: !selectedFile
     }
   ];
 
-  // Recent projects (mock data for now)
-  const recentProjects = [
-    { id: 1, name: 'Wedding Video Enhancement', status: 'completed', date: '2 hours ago' },
-    { id: 2, name: 'Conference Recording Upscale', status: 'processing', date: '1 day ago' },
-    { id: 3, name: 'Nature Documentary 4K', status: 'completed', date: '3 days ago' }
-  ];
-
-  const colorClasses = {
-    blue: 'bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20 text-blue-400',
-    purple: 'bg-purple-500/10 border-purple-500/20 hover:bg-purple-500/20 text-purple-400',
-    green: 'bg-green-500/10 border-green-500/20 hover:bg-green-500/20 text-green-400'
-  };
-
   return (
-    <motion.div 
-      className="h-full p-8 overflow-auto"
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
-    >
-      <div className="max-w-7xl mx-auto space-y-8">
-        
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-950 p-6">
+      <div className="max-w-6xl mx-auto space-y-8">
         {/* Header Section */}
-        <motion.div variants={itemVariants} className="space-y-2">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Welcome to Frame Evolve
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center space-y-4"
+        >
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            Frame Evolve
           </h1>
-          <p className="text-xl text-slate-400">
-            Professional video enhancement at your fingertips
+          <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+            Professional video upscaling and enhancement powered by AI
           </p>
         </motion.div>
 
-        {/* Quick Stats */}
-        <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          
-          {/* Total Projects */}
-          <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Total Projects</p>
-                <p className="text-2xl font-bold text-white">12</p>
-              </div>
-              <Video className="w-8 h-8 text-blue-400" />
-            </div>
-            <div className="mt-2 flex items-center text-sm text-green-400">
-              <TrendingUp className="w-4 h-4 mr-1" />
-              <span>+3 this week</span>
-            </div>
-          </div>
-
-          {/* Enhanced Videos */}
-          <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Enhanced Videos</p>
-                <p className="text-2xl font-bold text-white">47</p>
-              </div>
-              <Sparkles className="w-8 h-8 text-purple-400" />
-            </div>
-            <div className="mt-2 flex items-center text-sm text-green-400">
-              <TrendingUp className="w-4 h-4 mr-1" />
-              <span>+12 this month</span>
-            </div>
-          </div>
-
-          {/* Processing Time Saved */}
-          <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Time Saved</p>
-                <p className="text-2xl font-bold text-white">156h</p>
-              </div>
-              <Zap className="w-8 h-8 text-yellow-400" />
-            </div>
-            <div className="mt-2 flex items-center text-sm text-green-400">
-              <TrendingUp className="w-4 h-4 mr-1" />
-              <span>vs manual editing</span>
-            </div>
-          </div>
-
-          {/* Queue Status */}
-          <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700/50">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Queue Status</p>
-                <p className="text-2xl font-bold text-white">{processingQueue.length}</p>
-              </div>
-              <Clock className="w-8 h-8 text-green-400" />
-            </div>
-            <div className="mt-2 flex items-center text-sm text-slate-400">
-              <span>items pending</span>
-            </div>
-          </div>
-        </motion.div>
-
         {/* Quick Actions */}
-        <motion.div variants={itemVariants} className="space-y-4">
-          <h2 className="text-2xl font-semibold text-white">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {quickActions.map((action) => {
-              const Icon = action.icon;
-
-              return (
-                <motion.button
-                  key={action.id}
-                  onClick={action.action}
-                  disabled={action.disabled}
-                  className={`
-                    p-6 rounded-xl border transition-all duration-200 text-left group
-                    ${action.disabled 
-                      ? 'bg-slate-800/30 border-slate-700/30 text-slate-600 cursor-not-allowed' 
-                      : colorClasses[action.color]
-                    }
-                  `}
-                  whileHover={!action.disabled ? { scale: 1.02 } : {}}
-                  whileTap={!action.disabled ? { scale: 0.98 } : {}}
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-2">
-                      <Icon className="w-8 h-8" />
-                      <h3 className="font-semibold text-white">{action.title}</h3>
-                      <p className="text-sm text-slate-400">{action.description}</p>
-                    </div>
-                    {!action.disabled && (
-                      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    )}
-                  </div>
-                </motion.button>
-              );
-            })}
-          </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+        >
+          {quickActions.map((action, index) => {
+            const IconComponent = action.icon;
+            return (
+              <Card
+                key={action.title}
+                variant={action.disabled ? 'default' : 'interactive'}
+                className={`p-4 text-center space-y-3 ${
+                  action.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                }`}
+                onClick={!action.disabled ? action.action : undefined}
+              >
+                <div className={`
+                  mx-auto w-12 h-12 rounded-lg flex items-center justify-center
+                  ${action.disabled ? 
+                    'bg-slate-700/50 border border-slate-600/50' : 
+                    'bg-blue-500/20 border border-blue-500/30'}
+                `}>
+                  <IconComponent 
+                    size={24} 
+                    className={action.disabled ? 'text-slate-500' : 'text-blue-400'} 
+                  />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-200">{action.title}</h3>
+                  <p className="text-sm text-slate-400">{action.description}</p>
+                </div>
+              </Card>
+            );
+          })}
         </motion.div>
 
-        {/* Recent Projects & Getting Started */}
-        <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          {/* Recent Projects */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-white">Recent Projects</h2>
-            <div className="space-y-3">
-              {recentProjects.map((project) => (
-                <div
-                  key={project.id}
-                  className="bg-slate-800/30 rounded-lg p-4 border border-slate-700/50 hover:border-slate-600/50 transition-colors cursor-pointer"
-                  onClick={() => onProjectSelect && onProjectSelect(project)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <h3 className="font-medium text-white truncate">{project.name}</h3>
-                      <p className="text-sm text-slate-400 mt-1">{project.date}</p>
-                    </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      project.status === 'completed' 
-                        ? 'bg-green-500/20 text-green-400'
-                        : 'bg-blue-500/20 text-blue-400'
-                    }`}>
-                      {project.status}
-                    </span>
+        {/* Current File Status */}
+        {selectedFile && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            className="space-y-4"
+          >
+            <h2 className="text-2xl font-semibold text-slate-200">Current Project</h2>
+            <Card className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 rounded-lg bg-green-500/20 border border-green-500/30">
+                    <Play size={24} className="text-green-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-200">{selectedFile.name}</h3>
+                    <p className="text-sm text-slate-400">
+                      Ready for processing • {(selectedFile.size / 1024 / 1024).toFixed(1)} MB
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
+                <div className="flex space-x-2">
+                  <Button variant="secondary" size="sm">
+                    Settings
+                  </Button>
+                  <Button variant="primary" size="sm">
+                    Start Processing
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        )}
+
+        {/* Upload Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="space-y-4"
+        >
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl font-semibold text-slate-200">
+              {selectedFile ? 'Upload Another Video' : 'Get Started'}
+            </h2>
+            <p className="text-slate-400">
+              {selectedFile ? 
+                'Process multiple videos or replace the current one' : 
+                'Upload your video file to begin enhancement'}
+            </p>
           </div>
 
-          {/* Getting Started / Development Status */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-white">Development Progress</h2>
-            <div className="bg-slate-800/30 rounded-xl p-6 border border-slate-700/50 space-y-4">
-              <div>
-                <h4 className="font-medium text-green-400 mb-2">✅ Phase 1 Complete</h4>
-                <ul className="space-y-1 text-sm text-slate-300">
-                  <li>• Project setup and configuration</li>
-                  <li>• Custom titlebar with window controls</li>
-                  <li>• Professional splash screen system</li>
-                  <li>• Main layout with navigation</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-medium text-blue-400 mb-2">🚧 Coming in Phase 2</h4>
-                <ul className="space-y-1 text-sm text-slate-300">
-                  <li>• Design system foundation</li>
-                  <li>• Drag & drop file upload</li>
-                  <li>• Video preview components</li>
-                  <li>• Control panel interface</li>
-                </ul>
+          {/* Temporary Upload Area - No Input Components Yet */}
+          <div className="max-w-4xl mx-auto">
+            <div 
+              className="relative border-2 border-dashed border-slate-600 rounded-xl p-8 text-center transition-all duration-300 hover:border-slate-500 hover:bg-slate-800/30 cursor-pointer"
+              onClick={() => document.getElementById('file-input')?.click()}
+            >
+              <input
+                id="file-input"
+                type="file"
+                accept="video/*"
+                onChange={handleFileUpload}
+                className="hidden"
+              />
+              
+              <div className="flex flex-col items-center space-y-4">
+                <Upload size={48} className="text-slate-400" />
+                <div className="space-y-2">
+                  <h3 className="text-lg font-semibold text-slate-200">
+                    Drop video files here
+                  </h3>
+                  <p className="text-sm text-slate-400 max-w-sm">
+                    Supports MP4, AVI, MOV, MKV and other video formats
+                  </p>
+                </div>
+                <Button variant="secondary" size="sm">
+                  Browse Files
+                </Button>
               </div>
             </div>
+          </div>
+        </motion.div>
+
+        {/* Status Message */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="text-center p-6 rounded-lg border border-blue-500/30 bg-blue-500/10"
+        >
+          <h3 className="text-lg font-semibold text-blue-400 mb-2">
+            🔧 Debug Mode: Testing Basic Components
+          </h3>
+          <p className="text-blue-300 text-sm">
+            This version uses inline components to isolate import issues.<br/>
+            Once this works, we'll gradually add back the enhanced upload components.
+          </p>
+        </motion.div>
+
+        {/* Features Overview */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="space-y-6"
+        >
+          <h2 className="text-2xl font-semibold text-slate-200 text-center">
+            Why Choose Frame Evolve?
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="p-6 text-center space-y-4">
+              <div className="mx-auto w-16 h-16 rounded-lg bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
+                <Zap size={32} className="text-purple-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-200 mb-2">AI-Powered Enhancement</h3>
+                <p className="text-slate-400">
+                  Advanced algorithms automatically enhance video quality, sharpness, and detail
+                </p>
+              </div>
+            </Card>
+
+            <Card className="p-6 text-center space-y-4">
+              <div className="mx-auto w-16 h-16 rounded-lg bg-blue-500/20 border border-blue-500/30 flex items-center justify-center">
+                <Upload size={32} className="text-blue-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-200 mb-2">Simple Workflow</h3>
+                <p className="text-slate-400">
+                  Drag, drop, and enhance. Professional results with minimal effort required
+                </p>
+              </div>
+            </Card>
+
+            <Card className="p-6 text-center space-y-4">
+              <div className="mx-auto w-16 h-16 rounded-lg bg-green-500/20 border border-green-500/30 flex items-center justify-center">
+                <Settings size={32} className="text-green-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-200 mb-2">Full Control</h3>
+                <p className="text-slate-400">
+                  Fine-tune every aspect of enhancement with professional-grade controls
+                </p>
+              </div>
+            </Card>
           </div>
         </motion.div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
